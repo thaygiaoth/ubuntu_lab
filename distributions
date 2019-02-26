@@ -1,0 +1,30 @@
+# Tạo file cấu hình distributions cho lệnh reprepro
+# Dòng 19 dấu `` là phím dưới phím ESC (backquote, backtick), có thể thay `` bằng $()
+# Tham khảo: https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html
+# Chạy các lệnh dưới
+
+REPREPRO_BASE_DIR=/var/www/html
+
+cat > $REPREPRO_BASE_DIR/conf/distributions << EOF
+Origin: reprepro
+Label: reprepro
+Codename: bionic
+Architectures: i386 amd64 source
+Components: stable
+DebIndices: Packages Release . .gz .bz2 .xz
+DscIndices: Sources Release . .gz .bz2 .xz
+Contents: . .gz .bz2 .xz
+DscOverride: /var/www/html/indices/override.bionic.src
+Description: apt repo bằng reprepro
+SignWith: `gpg --list-keys --with-colons support@robusta.com|grep ^pub|cut -d':' -f5`
+Log: /var/log/reprepro.log
+EOF
+
+# Tạo file override cho reprepro
+# Xem các field của 1 package .deb: dpkg -f /path/to/package.deb
+# Xem 1 số field: dpkg -f /path/to/package.deb Section Priority
+
+cat > $REPREPRO_BASE_DIR/indices/override.bionic.src << EOF
+bind9 Section net1
+bind9 Priority optional1 
+EOF
