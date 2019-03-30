@@ -1,0 +1,102 @@
+
+---Upload gói deb source lên Ubuntu PPA
+
+---Tạo cặp khóa chung/riêng và upload lên http://keyserver.ubuntu.com/
+
+1. apt -y install rng-tools &&
+systemctl start rng-tools &&
+systemctl status rng-tools
+
+2. cat << EOF | gpg --batch --gen-key
+%echo Generating a default key
+%no-protection
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: Linux LPI1
+Name-Comment: Key cho repo apt
+Name-Email: thaygiaoth@gmail.com
+Expire-Date: $(date -d +5year +%Y-%m-%d)
+%commit
+%echo done
+EOF
+
+--> chú ý địa chỉ email của Name-Email ở trên bạn phải đăng nhập vào được
+
+3. key=$(gpg --list-keys --with-colons thaygiaoth@gmail.com | awk -F: '/^pub:/ { print $5 }')
+
+echo "default-key $key" >> ~/.gnupg/gpg.conf
+
+4.1 Upload key
+
+gpg --keyserver keyserver.ubuntu.com --send-keys 93CDC0114E920A3B
+
+4.2 Tìm key vừa upload
+
+gpg --keyserver http://keyserver.ubuntu.com --search-key 93CDC0114E920A3B
+
+5. Vào Launchpad đăng kí Fingerprint
+
+--> đã đăng kí tài khoản Ubuntu One
+
+https://launchpad.net/~thaygiaoth
+
+Tạo kho PPA tên tùy ý, sau đó vào kho PPA nhấn vào cây viết chì của OpenPGP keys:
+
+Nhập vào Fingerprint:
+
+Tìm Fingerprint của key bằng lệnh
+gpg --list-keys
+pub   rsa4096 2019-03-30 [SCEA] [expires: 2024-03-30]
+      95DA7052494943F385E6E6FE93CDC0114E920A3B --> là nó
+	  
+Nhấn vào Import key, Ubuntu sẽ gửi mail tới Name-Email: ở trên, có nội dung mã hóa bằng khóa riêng
+
+Nếu bạn là chủ sở hữu của cặp khóa này thì bạn sẽ giải mã được nội dung mail
+
+Chép toàn bộ nội dung nhận được
+
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1
+...
+...
+-----END PGP MESSAGE-----
+
+cho vào file tên là opgpm (đặt tên tùy ý)
+
+Giải mã nội dung mail
+
+gpg -d opgpm
+
+Cuối nội dung mail là
+
+Please go here to finish adding the key to your Launchpad account:
+
+    https://launchpad.net/token/xxxx
+	
+Chép dòng url và chạy trên trình duyệt web, thực hiện theo yêu cầu là xong
+
+---Tạo gói deb ở dạng source và kí cho gói source
+
+6. Thực hiện như lab hướng dẫn trong slide, tạo gói có kí bằng lệnh
+dpkg-buildpackage -S -kthaygiaoth@gmail.com
+
+7. Upload source lên PPA bằng lệnh dput
+
+dput ppa:thaygiaoth/chaoban ../chaoban_0.9_source.changes
+
+Checking signature on .changes
+gpg: ../chaoban_0.9_source.changes: Valid signature from 93CDC0114E920A3B
+Checking signature on .dsc
+gpg: ../chaoban_0.9.dsc: Valid signature from 93CDC0114E920A3B
+Uploading to ppa (via ftp to ppa.launchpad.net):
+  Uploading chaoban_0.9.dsc: done.
+  Uploading chaoban_0.9.orig.tar.xz: done.
+  Uploading chaoban_0.9.debian.tar.xz: done.
+  Uploading chaoban_0.9_source.buildinfo: done.
+  Uploading chaoban_0.9_source.changes: done.
+Successfully uploaded packages.
+
+8. Vào kho PPA xem
+https://launchpad.net/~thaygiaoth/+archive/ubuntu/chaoban
+
+---THE END---
