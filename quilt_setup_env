@@ -9,8 +9,11 @@ QUILT_REFRESH_ARGS="-p ab"
 export QUILT_PATCHES QUILT_PATCH_OPTS QUILT_DIFF_OPTS QUILT_DIFF_ARGS QUILT_REFRESH_ARGS
 EOF
 
+# Đọc nội dung file ~/.bashrc lấy giá trị các biến môi trường 
+# Có thể thay source bằng dấu .
 source ~/.bashrc
 
+# Nhấn TAB 2 lần sẽ thấy 5 biến quilt khai báo ở trên
 echo $QUILT_
 
 vim ~/.quiltrc
