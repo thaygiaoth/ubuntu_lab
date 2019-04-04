@@ -1,0 +1,32 @@
+# Thiết lập môi trường quilt
+
+cat >> ~/.bashrc << EOF
+QUILT_PATCHES=debian/patches
+QUILT_PATCH_OPTS="--reject-format=unified"
+QUILT_DIFF_OPTS='-p'
+QUILT_DIFF_ARGS="-p ab --color=auto"
+QUILT_REFRESH_ARGS="-p ab"
+export QUILT_PATCHES QUILT_PATCH_OPTS QUILT_DIFF_OPTS QUILT_DIFF_ARGS QUILT_REFRESH_ARGS
+EOF
+
+source ~/.bashrc
+
+echo $QUILT_
+
+vim ~/.quiltrc
+d=.
+
+while [ ! -d $d/debian -a `readlink -e $d` != / ];
+        do
+                d=$d/..;
+        done
+
+if [ -d $d/debian ] && [ -z $QUILT_PATCHES ]; then
+        # if in Debian packaging tree with unset $QUILT_PATCHES
+        QUILT_PATCHES="debian/patches"
+        if ! [ -d $d/debian/patches ]; then
+                mkdir $d/debian/patches;
+        fi
+fi
+
+# Nhấn :x để lưu và thoát
