@@ -77,8 +77,12 @@ Chép dòng url và chạy trên trình duyệt web, thực hiện theo yêu c�
 
 ---Tạo gói deb ở dạng source và kí cho gói source
 
-6. Thực hiện như lab hướng dẫn trong slide, tạo gói có kí bằng lệnh
+6. Thực hiện như lab hướng dẫn trong slide
+Chỉ cần tạo gói deb source, phải kí bằng lệnh dưới
+
 dpkg-buildpackage -S -kthaygiaoth@gmail.com
+
+--> Ubuntu tự động biên dịch thành deb binary cho bạn
 
 7. Upload source lên PPA bằng lệnh dput
 
