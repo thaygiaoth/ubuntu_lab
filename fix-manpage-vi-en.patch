@@ -1,0 +1,20 @@
+--- a/man/chaoban.1	2019-04-05 09:49:19.316490730 +0000
++++ b/man/chaoban.1	2019-04-05 09:49:57.474636158 +0000
+@@ -3,7 +3,7 @@
+ .B chaoban 
+ \- In ra giữa màn hình dòng chữ 'Chao ban tên_bạn'
+ .SH SYNOPSIS
+-Nhập tên chương trình (lệnh)
++Nhập tên ứng dụng (lệnh)
+ .B chaoban 
+ sẽ có thông tin sau ở giữa màn hình
+ .br
+@@ -11,6 +11,6 @@
+ .br
+ Nhap ten ban: --> nhập tên bạn vào
+ .SH OPTIONS
+-Chương trình này không có tùy chọn
+-.SH DESRIPTION
++Ứng dụng này không có tùy chọn
++.SH DESCRIPTION
+ Nhập tên tối đa 40 kí tự
