@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 	//Khi chạy ./a.out /dev/sda /dev/tty1 /root
 	//thì a.out là argv[0], /dev/sda là argv[1], /dev/tty1 là argv[2], /root la argv[3]
 
-	//argc (argument count) chứa tất cả các giá trị nhập vào, thường dịch là đối số
+	//argc (argument count) lưu số lượng các giá trị nhập vào, thường dịch là đối số
 	//argv (argument vector) là mảng 1 chiều chứa từng giá trị nhập vào
 	//--> các giá trị cách nhau bằng 1 hoặc nhiều khoảng trắng hoặc phím tab, kết thúc bằng phím enter
     	for (int i = 1; i < argc; i++) 
