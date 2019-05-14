@@ -2,8 +2,12 @@
 
 ---Ubuntu Server 18.04.2 x86_64---
 
-Cách 1. Sau khi thêm ổ cứng mới nếu không thấy thì 
-chạy lệnh dưới từ bash shell hoặc từ script
+Cách 1
+
+Chạy lệnh tail -f /var/log/syslog để xem log nhận ổ cứng mới
+
+Sau khi thêm ổ cứng mới nếu không thấy thì 
+chạy lệnh dưới từ bash shell hoặc từ script ở 1 terminal khác
 
 for i in {1..32} 
 do 
@@ -14,7 +18,9 @@ Nếu chạy lệnh trực tiếp từ bash shell trên 1 dòng thì
 
 for i in {1..32} ; do  echo '- - -' > /sys/class/scsi_host/host$i/scan ; done
 
-Cách 2. Cài gói scsitools
+Cách 2
+
+Cài gói scsitools
 apt -y install scsitools
 
 Chạy lệnh rescan-scsi-bus
@@ -39,6 +45,8 @@ parted /dev/sdb print
 
 B1. Trước khi thêm đĩa cứng dùng lệnh
 tail -f /var/log/messages
+
+---CentOS /var/log/messages = Ubuntu /var/log/syslog
 
 B2. Sau khi thêm ổ cứng, xem lại log sẽ thấy có dòng giống bên dưới
 May 15 04:29:05 el8 kernel: sd 4:0:0:0: [sdb] Attached SCSI disk
