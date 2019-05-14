@@ -10,11 +10,18 @@ do
 echo '- - -' > /sys/class/scsi_host/host$i/scan 
 done
 
+Nếu chạy lệnh trực tiếp từ bash shell trên 1 dòng thì
+
+for i in {1..32} ; do  echo '- - -' > /sys/class/scsi_host/host$i/scan ; done
+
 Cách 2. Cài gói scsitools
 apt -y install scsitools
 
 Chạy lệnh rescan-scsi-bus
 --> có dòng 1 new device(s) found.
+
+---Lệnh rescan-scsi-bus viết bằng bash, xem code để tăng trình độ viết script
+---nano `which rescan-scsi-bus`
 
 Dùng lệnh lsscsi kiểm tra
 apt install lsscsi
