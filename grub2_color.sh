@@ -7,7 +7,7 @@ rm -f /var/lib/dpkg/lock &&
 apt -y install wget
 
 # Thêm dấu # trước tham số GRUB_TERMINAL=console trong 50-curtin-settings
-sed -i 's/^GRUB_TERMINAL=.*/#&/' /etc/default/grub.d/50-curtin-settings
+sed -i 's/^GRUB_TERMINAL=.*/#&/' /etc/default/grub.d/50-curtin-settings.cfg
 
 # Trên Ubuntu, GRUB2 tự nhận hình nền .jpg, .jpeg, .png... trong /boot/grub 
 # Sau khi dùng lệnh update-grub sẽ thấy có dòng Found background image:
@@ -21,7 +21,7 @@ sed -i '/true\"$/a \\t\techo \"  set color_normal=light-green\/black\"' /etc/gru
 sed -i 's/.*true\"/#&/' /etc/grub.d/05_debian_theme
 
 # Chỉnh thời gian chờ là 10 giây
-sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=10/' /etc/default/grub
+sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=10/' /etc/default/grub
 
 # Giả sử có dấu # trước GRUB_TERMINAL và GRUB_GFXMODE trong /etc/default/grub
 # Thêm các chế độ phân giải màn hình để chọn từ trái sang phải nếu có
