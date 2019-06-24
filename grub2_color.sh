@@ -33,7 +33,7 @@ update-grub
 
 # Tắt máy, do kiểm tra thấy khởi động lại nhiều khi không ăn cấu hình
 echo "Tat may trong 5 giay nua"
-sleep 3
+sleep 5
 init 0
 
 ###DONE###
