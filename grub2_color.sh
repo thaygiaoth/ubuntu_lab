@@ -23,7 +23,7 @@ sed -i 's/.*true\"/#&/' /etc/grub.d/05_debian_theme
 # Chỉnh thời gian chờ là 10 giây
 sed -i 's/GRUB_TIMEOUT=.*/GRUB_TIMEOUT=10/' /etc/default/grub
 
-# Giả sử có dấu # trước GRUB_TERMINAL và GRUB_GFXMODE
+# Giả sử có dấu # trước GRUB_TERMINAL và GRUB_GFXMODE trong /etc/default/grub
 # Thêm các chế độ phân giải màn hình để chọn từ trái sang phải nếu có
 # Tham khảo https://www.gnu.org/software/grub/manual/grub/html_node/gfxpayload.html#gfxpayload
 echo 'GRUB_GFXMODE=1152x864,1024x768,854x480,auto' > /etc/default/grub
