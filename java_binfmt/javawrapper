@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Chép từ https://www.kernel.org/doc/html/latest/admin-guide/java.html
+
 # /usr/local/bin/javawrapper - the wrapper for binfmt_misc/java
 
 if [ -z "$1" ]; then
