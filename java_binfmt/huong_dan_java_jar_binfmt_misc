@@ -1,3 +1,5 @@
+#!/bin/bash
+
 /* Hướng dẫn chạy trực tiếp .jar từ OS bằng cơ chế binfmt_misc */
 
 Cài jdk (java development kit)
