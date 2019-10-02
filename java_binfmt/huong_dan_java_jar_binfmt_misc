@@ -1,0 +1,124 @@
+/* Hướng dẫn chạy trực tiếp .jar từ OS bằng cơ chế binfmt_misc */
+
+Cài jdk (java development kit)
+
+---Ubuntu cài jdk: apt -y install default-jdk
+
+---EL 7/8 cài gói Oracle JDK rpm từ https://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+1. Biên dịch mã nguồn file java là .java
+
+javac thoigian.java
+
+--> dựa vào tên class trong thoigian.java --> tạo ra tên_class.class
+
+--> ở đây là thoigian.class
+
+2. Chạy file vừa tạo ra sau khi biên dịch
+
+java thoigian
+
+3. .jar (java archive) có 2 loại: non-executable và executable
+
+3.1 Tạo .jar loại non-executable
+
+jar -cvf thoigian.jar thoigian.class
+
+--> man javac hoặc javac --help để xem giải thích các tùy chọn
+
+3.2 Chạy .jar loại non-executable
+
+java -cp thoigian.jar thoigian
+
+--> cp là classpath
+
+java -jar thoigian.jar
+no main manifest attribute, in thoigian.jar
+
+--> do trong .jar có file META-INF/MANIFEST.M chưa chỉ ra class thoigian
+
+--> xem trong .jar có gì = lệnh:
+jar tf thoigian.jar
+META-INF/
+META-INF/MANIFEST.MF
+thoigian.class
+
+--> giải nén file manifest trong .jar để xem nội dung
+jar xf thoigian.jar META-INF/MANIFEST.MF
+
+cat -n META-INF/MANIFEST.MF
+1 Manifest-Version: 1.0
+2 Created-By: 11.0.4 (Ubuntu)
+
+3.3 Tạo .jar loại executable
+
+B1. Tạo file manifest là thoigian.mf nội dung như bên dưới
+Manifest-Version: 1.0
+Main-Class: thoigian
+
+B2. Tạo = lệnh jar
+jar -cmfv thoigian.mf thoigian.jar thoigian.class thoigian.java
+
+--> m là manifest
+
+--> Bổ sung 1 chút: thêm file vào .jar
+jar uf thoigian.jar file_nào_đó
+
+3.4 Chạy .jar loại executable
+
+java -jar thoigian.jar
+
+-----Chạy trực tiếp từ OS-----
+
+chmod +x thoigian.jar
+
+./thoigian.jar
+-bash: ./thoigian.jar: cannot execute binary file: Exec format error
+
+--> không hiểu định dạng .jar 
+--> do mặc định linux chỉ chạy định dạng ELF (Executable and Linkable Format) và shebang (#!)
+
+----------------------------------------------------------------------
+
+4. Chạy trực tiếp .jar từ OS bằng binfmt_misc, không cần lệnh java
+
+B1. Kiểm tra trong binfmt_misc
+
+---Ubuntu 18.04.3
+# cat /proc/sys/fs/binfmt_misc/jar
+enabled
+interpreter /usr/bin/jexec
+flags:
+offset 0
+magic 504b0304
+
+---EL 7/8
+# cat /proc/sys/fs/binfmt_misc/jexec
+enabled
+interpreter /usr/java/default/lib/jexec
+flags:
+offset 0
+magic 504b0304
+
+--> EL 7/8 chuyển từ openjdk sang oracle jdk
+alternatives --config java
+
+---Xem số magic của .jar
+# xxd -l 16 thoigian.jar
+00000000: 504b 0304 1400 0808 0800 0712 424f 0000  PK..........BO..
+
+--> 504b 0304 là số magic của .jar
+
+B2. Chạy .jar từ OS
+
+./thoigian.jar --> chạy ngon lành
+
+---Bỏ giá trị trong binfmt_misc
+
+echo -1 > /proc/sys/fs/binfmt_misc/jexec
+
+echo -1 > /proc/sys/fs/binfmt_misc/jar
+
+Cách khác: https://www.kernel.org/doc/html/latest/admin-guide/java.html
+
+---HẾT---
