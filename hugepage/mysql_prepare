@@ -48,7 +48,19 @@ shmall_value=$(expr \( $SHMMAX / $PAGESIZE \) \* \( $SHMMNI / 16 \))
 echo $shmmax_value > /proc/sys/kernel/shmmax
 echo $shmall_value > /proc/sys/kernel/shmall
 
----6. Theo thứ tự: xài hugepage, log nhiều thông tin hơn, bật chứ năng đếm bộ nhớ được cấp phát
+---6. Cho bạn mysql 1 số lượng bộ nhớ luôn lưu trên RAM (không bị swap) 
+Tính = KiB, cho 200 trang * 2048 KiB = 409600 
+
+su mysql --shell /bin/bash --command "ulimit -a"
+
+echo 'mysql  soft  memlock  409600' >> /etc/security/limits.conf
+echo 'mysql  hard  memlock  409600' >> /etc/security/limits.conf
+
+Kiểm tra lại
+
+su mysql --shell /bin/bash --command "ulimit -a"
+
+---7. Theo thứ tự: xài hugepage, log nhiều thông tin hơn, bật chứ năng đếm bộ nhớ được cấp phát
 
 echo 'large-pages' >> /etc/mysql/mysql.conf.d/mysqld.cnf 
 echo 'log_error_verbosity=3' >> /etc/mysql/mysql.conf.d/mysqld.cnf 
