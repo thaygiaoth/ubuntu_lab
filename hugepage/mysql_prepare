@@ -1,0 +1,57 @@
+---1. Cài MySQL 8.0.18++ từ link này
+https://dev.mysql.com/downloads/repo/apt/
+
+---Các bước mẫu
+
+wget https://dev.mysql.com/get/mysql-apt-config_0.8.14-1_all.deb
+dpkg -i mysql-apt-config_0.8.14-1_all.deb
+apt update
+apt -y  install mysql-server
+
+---2. Tắt MySQL
+systemctl stop mysql && systemctl status mysql
+
+---3. Mở rule apparmor (thêm các dòng có dấu +) để mysql xài được hugepage
+vim /etc/apparmor.d/usr.sbin.mysqld
+   /proc/*/status r,
++  / rw,
++  /etc/ssl/openssl.cnf r,
++  capability ipc_lock,
+   capability sys_resource,
+
+Nếu muốn tắt hoàn toàn apparmor thì
+vim /etc/default/grub
+GRUB_CMDLINE_LINUX_DEFAULT="... apparmor=0"
+
+update-grub
+reboot
+
+Mình có báo cáo lỗi rùi
+https://bugs.mysql.com/bug.php?id=97768
+
+Hi vọng sẽ sớm sửa và không phải chỉnh tay cái này nữa
+
+---4. Cho cái THP nó tắt ngủm trước đã
+
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+cat /sys/kernel/mm/transparent_hugepage/enabled
+
+---5. Chạy mấy cái lệnh dưới để gán giá trị cho shmmax, shmall
+
+MEMTOTAL=$(free -b | sed -n '2p' | awk '{print $2}')
+SHMMAX=$(expr $MEMTOTAL / 2)
+SHMMNI=4096
+PAGESIZE=$(getconf PAGE_SIZE)
+shmmax_value=$SHMMAX
+shmall_value=$(expr \( $SHMMAX / $PAGESIZE \) \* \( $SHMMNI / 16 \))
+
+echo $shmmax_value > /proc/sys/kernel/shmmax
+echo $shmall_value > /proc/sys/kernel/shmall
+
+---6. Theo thứ tự: xài hugepage, log nhiều thông tin hơn, bật chứ năng đếm bộ nhớ được cấp phát
+
+echo 'large-pages' >> /etc/mysql/mysql.conf.d/mysqld.cnf 
+echo 'log_error_verbosity=3' >> /etc/mysql/mysql.conf.d/mysqld.cnf 
+echo "performance-schema-instrument='memory/%=COUNTED'" >> /etc/mysql/mysql.conf.d/mysqld.cnf
+
+---THE END---
