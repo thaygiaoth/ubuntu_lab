@@ -32,12 +32,13 @@ void kiemtra_ten_mat_khau(const char *ten, const char *matkhau, struct passwd *p
     	sp = getspnam(pw->pw_name);
 	endspent();
 	
-	//Lấy giá trị mật khẩu mã hóa theo tên người dùng trong /etc/shadow
+	//Lấy giá trị salt theo tên người dùng trong /etc/shadow
 	gt_salt = sp->sp_pwdp;
 	
-	/*Dùng hàm crypt để mã hóa mật khẩu
+	/*Dùng hàm crypt() để mã hóa dựa vào mật khẩu nhập vào và giá trị salt 
+	 * để so sánh với chuỗi mật khẩu đã mã hóa trong /etc/shadow
 	 * điều ngộ ngộ là giá trị gt_salt không chỉ có salt mà là $6$rounds=xxx$salt$pass_đã_mã_hóa
-	 * nhưng vẫn crypt vẫn lấy ra được salt và xài tốt
+	 * nhưng crypt() vẫn lấy ra được salt và xài tốt
 	 */
 	mk_mahoa = crypt(matkhau, gt_salt);
     
@@ -50,7 +51,9 @@ void kiemtra_ten_mat_khau(const char *ten, const char *matkhau, struct passwd *p
 /*Mị giải thích chút nha
  * 
  * Biên dịch chương trình này như mọi khi
- * gcc final_check.c -lcrypt
+ * mặc định sau khi biên dịch tạo ra file nhị phân a.out
+ * nếu muốn tên khác thì thêm -o tên
+ * gcc password_check.c -lcrypt
  * 
  * Chạy: ./a.out root 123
  * 
@@ -61,10 +64,14 @@ void kiemtra_ten_mat_khau(const char *ten, const char *matkhau, struct passwd *p
 
 int main(int argc, char *argv[])
 {
-	//Muốn chiên xâu hơn, ngon hơn thì xài getopt_long(3) nha mí bạn
-	if ((strcmp(argv[1], "-help") == 0) || (strcmp(argv[1], "--help") == 0) || (strcmp(argv[1], "-h") == 0))
+	/*Cái if này để ngừ ta chạy ./a.out hoặc ./a.out -h|-help|--help 
+	 * sẽ in ra mấy cái dòng hướng dẫn dưới
+	 * muốn chiên xâu hơn, ngon hơn thì xài getopt_long(3) nha mí bạn
+	 */
+	if (argc != 3 || (strcmp(argv[1], "-help") == 0) || (strcmp(argv[1], "--help") == 0) || (strcmp(argv[1], "-h") == 0))
 	{
-        	printf("Xài vậy nà: %s tên_người_dùng mật_khẩu\n", argv[0]);
+        	printf("\nKiểm tra tên người dùng và mật khẩu trên Linux\n");
+		printf("Xài vậy nà: %s tên mật_khẩu\n\n", argv[0]);
         	exit(EXIT_FAILURE);
         }
 
