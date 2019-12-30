@@ -18,7 +18,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <crypt.h>
 
 int main(int argc, char *argv[])
