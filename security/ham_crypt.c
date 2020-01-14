@@ -31,6 +31,10 @@ int main(int argc, char *argv[])
 	
 	char sha512_salt[37]="";
 	sprintf(sha512_salt, "%s%s%s%s%s", "$6$rounds=", argv[3], "$", argv[2], "$");
+
+	char blowfish_salt[200]="";
+	//bcrypt là 2a, 2b, 2x, 2y
+        sprintf(blowfish_salt, "%s%s%s%s%s", "$2a$rounds=", argv[3], "$", argv[2], "$");
 	
 	/* Hàm crypt() mặc định là mã hóa DES, lấy salt chỉ 2 kí tự đầu tiên
 	 * mật khẩu mã hóa dài 13 kí tự,  2 kí tự đầu tiên là salt
@@ -42,4 +46,8 @@ int main(int argc, char *argv[])
 	printf("Mã hóa SHA256: %s\n", crypt(argv[1], sha256_salt));
 	
 	printf("Mã hóa SHA512: %s\n", crypt(argv[1], sha512_salt));
+	
+	//In ra null để biết glibc không hỗ trợ bcrypt
+	printf("Mã hóa bcrypt: %s\n", crypt(argv[1], blowfish_salt));
+
 }
