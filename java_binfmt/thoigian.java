@@ -15,7 +15,7 @@ class thoigian
         	int year = cal.get(Calendar.YEAR);
         	int month = cal.get(Calendar.MONTH) + 1;
         	int day = cal.get(Calendar.DATE);
-        	int hour = cal.get(Calendar.HOUR_OF_DAY) + 7;
+        	int hour = cal.get(Calendar.HOUR_OF_DAY);
         	int minute = cal.get(Calendar.MINUTE);
 		int seconds = cal.get(Calendar.SECOND);
 
